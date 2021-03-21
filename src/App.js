@@ -8,7 +8,7 @@ import {
   Checkout,
   Products,
   About,
-  Private,
+  //Private,
   Error,
 } from './pages/index';
 
