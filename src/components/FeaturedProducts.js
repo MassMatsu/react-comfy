@@ -7,13 +7,17 @@ import Loading from './Loading';
 import Product from './Product';
 
 const FeaturedProducts = () => {
-  const { featured_products, products_loading:loading, products_error:error } = useProductsContext();
+  const {
+    featured_products,
+    products_loading: loading,
+    products_error: error,
+  } = useProductsContext();
 
   if (loading) {
-    return <Loading/>
+    return <Loading />;
   }
   if (error) {
-    return <Error/>
+    return <Error />;
   }
   return (
     <Wrapper className='section'>
@@ -23,9 +27,7 @@ const FeaturedProducts = () => {
       </div>
       <div className='section-center featured'>
         {featured_products.slice(0, 3).map((item) => {
-       
-            return <Product key={item.id} {...item} />;
- 
+          return <Product key={item.id} {...item} />;
         })}
       </div>
       <Link to='/products' className='btn'>
