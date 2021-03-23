@@ -15,7 +15,52 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 
 const SingleProductPage = () => {
-  return <h4>single product page</h4>
+  const {fetchSingleProduct, single_product_loading, single_product_error, single_product } = useProductsContext()
+  const {id} = useParams()
+  console.log('id', id)
+  const {name, images, stars, reviews, price, description, stock, company:brand, color} = single_product
+  const history = useHistory()
+
+  useEffect(() => {
+    fetchSingleProduct(url, id)
+  }, [])
+
+  if (single_product_loading) {
+    return <Loading/>
+  }
+  if (single_product_error) {
+    return <Error/>
+  }
+  return <Wrapper>
+    <PageHero title={`products / ${name}`}/>
+    <div className="section section-center page">
+    <Link to='/products' className='btn'>back to products</Link>
+    <div className="product-center">
+    <ProductImages images={images}/>
+    <section className="content">
+    <h2>{name}</h2>
+    <Stars stars={stars} reviews={reviews}/>
+    <h5 className="price">{formatPrice(price)}</h5>
+    <p className='desc'>{description}</p>
+    <p className='info'>
+    <span>Available: </span>
+    {stock > 0 && 'In stock'}
+    </p>
+    <p className="info">
+    <span>SKU :</span>
+    {id}
+    </p>
+    <p className="info">
+    <span>Brand :</span>
+    {brand}
+    </p>
+    <hr/>
+    <AddToCart color={color}/>
+    </section>
+    </div>
+    </div>
+
+  </Wrapper>
 }
 
 const Wrapper = styled.main`
