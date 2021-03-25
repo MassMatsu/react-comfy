@@ -13,7 +13,7 @@ const filter_reducer = (state, action) => {
 
   if (action.type === LOAD_PRODUCTS) {
     console.log(action);
-    return { ...state, all_products: [...action.payload], filtered_products: [...action.payload] }; // use copy of payload not to filter original array!!
+    return { ...state, all_products: [...action.payload], filtered_products: [...action.payload] }; // use copy of payload for each in order not to use the same place in memory!!
   }
 
   
