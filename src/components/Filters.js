@@ -1,33 +1,94 @@
-import React from 'react'
-import styled from 'styled-components'
-import { useFilterContext } from '../context/filter_context'
-import { getUniqueValues, formatPrice } from '../utils/helpers'
-import { FaCheck } from 'react-icons/fa'
+import React from 'react';
+import styled from 'styled-components';
+import { useFilterContext } from '../context/filter_context';
+import { getUniqueValues, formatPrice } from '../utils/helpers';
+import { FaCheck } from 'react-icons/fa';
 
 const Filters = () => {
-  const {filters:{text, price, min_price, max_price}, updateFilters} = useFilterContext()
-  return <Wrapper>
-    <div className="content">
-    <form onSubmit={(e) => {e.preventDefault()}}>
-      <div className="form-control">
-      <input type="text" className="search-input" name='text' placeholder='search' value={text} onChange={updateFilters} />
-      </div>
-      <div className="form-control">
-      <h5>category</h5>
+  const {
+    filters: { text, category, price, min_price, max_price },
+    updateFilters,
+    all_products,
+  } = useFilterContext();
 
+  const categories = getUniqueValues(all_products, 'category');
+  const companies = getUniqueValues(all_products, 'company');
+  const colors = getUniqueValues(all_products, 'colors');
+
+  return (
+    <Wrapper>
+      <div className='content'>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+          }}
+        >
+          <div className='form-control'>
+            <input
+              type='text'
+              className='search-input'
+              name='text'
+              placeholder='search'
+              value={text}
+              onChange={updateFilters}
+            />
+          </div>
+          <div className='form-control'>
+            <h5>category</h5>
+            <div>
+              {categories.map((item, index) => {
+                return (
+                  <button
+                    type='button'
+                    name='category'
+                    className={
+                      item.toLowerCase() === category ? 'active' : null
+                    }
+                    onClick={updateFilters}
+                    key={index}
+                  >
+                    {item}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          <div className='form-control'>
+            <h5>company</h5>
+            <div className='company'>
+              <select
+                name='company'
+                className='company'
+                onChange={updateFilters}
+              >
+                {companies.map((company) => {
+                  return <option value={company}>{company}</option>;
+                })}
+              </select>
+            </div>
+          </div>
+          <div className='form-control'>
+            <h5>colors</h5>
+            <div className='colors'></div>
+          </div>
+          <div className='form-control'>
+            <h5>price</h5>
+            <p className='price'>{formatPrice(max_price)}</p>
+            <input
+              type='range'
+              name='price'
+              min={min_price}
+              max={max_price}
+              value={price}
+              onChange={updateFilters}
+            />
+          </div>
+          <div className='form-control'></div>
+        </form>
       </div>
-      <div className="form-control"></div>
-      <div className="form-control"></div>
-      <div className="form-control">
-      <h5>price</h5>
-      <p className="price">{formatPrice(max_price)}</p>
-      <input type="range" name='price' min={min_price} max={max_price} value={price} onChange={updateFilters}/>
-      </div>
-      <div className="form-control"></div>
-    </form>
-    </div>
-  </Wrapper>
-}
+    </Wrapper>
+  );
+};
 
 const Wrapper = styled.section`
   .form-control {
@@ -67,6 +128,7 @@ const Wrapper = styled.section`
     border-radius: var(--radius);
     border-color: transparent;
     padding: 0.25rem;
+    width: 75px;
   }
   .colors {
     display: flex;
@@ -126,6 +188,6 @@ const Wrapper = styled.section`
       top: 1rem;
     }
   }
-`
+`;
 
-export default Filters
+export default Filters;
