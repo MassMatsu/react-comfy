@@ -26,8 +26,8 @@ const initialState = {
     min_price: 0,
     max_price: 0,
     price: 0,
-    shipping: false
-  }
+    shipping: false,
+  },
 };
 
 const FilterContext = React.createContext();
@@ -36,14 +36,15 @@ export const FilterProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { products } = useProductsContext();
 
+  // to set all_products and filterd_products
   useEffect(() => {
     dispatch({ type: LOAD_PRODUCTS, payload: products });
   }, [products]);
 
+  // for filtering everytime the sort and filters state value change
   useEffect(() => {
-    dispatch({type: FILTER_PRODUCTS}) // filter the products
-    dispatch({ type: SORT_PRODUCTS });  // and then sort them in order
-    
+    dispatch({ type: FILTER_PRODUCTS }); // filter the products
+    dispatch({ type: SORT_PRODUCTS }); // and then sort them in order
   }, [products, state.sort, state.filters]);
 
   const setGridView = () => {
@@ -58,25 +59,25 @@ export const FilterProvider = ({ children }) => {
     dispatch({ type: UPDATE_SORT, payload: value });
   };
   const updateFilters = (e) => {
-    let name = e.target.name
-    let value = e.target.value
+    let name = e.target.name;
+    let value = e.target.value;
     if (name === 'category') {
-      value = e.target.textContent
+      value = e.target.textContent;
     }
     if (name === 'color') {
-      value = e.target.dataset.color
+      value = e.target.dataset.color;
     }
     if (name === 'price') {
-      value = Number(value)
+      value = Number(value);
     }
     if (name === 'shipping') {
-      value = e.target.checked
+      value = e.target.checked;
     }
-    dispatch({type: UPDATE_FILTERS, payload: {name, value}})
-  }
+    dispatch({ type: UPDATE_FILTERS, payload: { name, value } });
+  };
   const clearFilters = () => {
-    dispatch({type: CLEAR_FILTERS})
-  }
+    dispatch({ type: CLEAR_FILTERS });
+  };
 
   return (
     <FilterContext.Provider
@@ -86,7 +87,7 @@ export const FilterProvider = ({ children }) => {
         setListView,
         updateSort,
         updateFilters,
-        clearFilters
+        clearFilters,
       }}
     >
       {children}
