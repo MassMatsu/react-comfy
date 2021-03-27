@@ -27,11 +27,7 @@ const filter_reducer = (state, action) => {
     console.log(action)
     return {...state, filters: {...state.filters, [action.payload.name]: action.payload.value}}
   }
-  if (action.type === FILTER_PRODUCTS) {
-    console.log(action)
-    return {...state}
-  }
-  if (action.type === CLEAR_FILTERS) {
+   if (action.type === CLEAR_FILTERS) {
     console.log(action)
     return {
       ...state,
@@ -46,6 +42,11 @@ const filter_reducer = (state, action) => {
       },
     };
   }
+  if (action.type === FILTER_PRODUCTS) {
+    console.log(action)
+    return {...state}
+  }
+ 
   if (action.type === SET_GRIDVIEW) {
     console.log(action);
     return { ...state, grid_view: true };
