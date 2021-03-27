@@ -15,12 +15,12 @@ const filter_reducer = (state, action) => {
     const allPrices = action.payload.map((p) => p.price)
     const maxPrice = Math.max(...allPrices) // spread operator to spread elements in an array
     const minPrice = Math.min(...allPrices)
-    console.log(maxPrice, minPrice)
+    //console.log(maxPrice, minPrice)
     return {
       ...state,
       all_products: [...action.payload],
       filtered_products: [...action.payload],
-      filters: {...state.filters, min_price: minPrice,max_price: maxPrice} // still need a copy of state.filters to overwrite the object
+      filters: {...state.filters, min_price: minPrice, max_price: maxPrice, price: maxPrice} // still need a copy of state.filters to overwrite the object
     }; // use copy of payload for each in order not to use the same place in memory!!
   }
   if (action.type === UPDATE_FILTERS) {
@@ -30,6 +30,21 @@ const filter_reducer = (state, action) => {
   if (action.type === FILTER_PRODUCTS) {
     console.log(action)
     return {...state}
+  }
+  if (action.type === CLEAR_FILTERS) {
+    console.log(action)
+    return {
+      ...state,
+      filters: {
+        ...state.filters,
+        text: '',
+        category: 'all',
+        company: 'all',
+        color: 'all',
+        price: state.filters.max_price,
+        shipping: false,
+      },
+    };
   }
   if (action.type === SET_GRIDVIEW) {
     console.log(action);

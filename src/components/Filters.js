@@ -6,9 +6,10 @@ import { FaCheck } from 'react-icons/fa';
 
 const Filters = () => {
   const {
-    filters: { text, category, price, min_price, max_price },
+    filters: { text, category, color, price, min_price, max_price, shipping },
     updateFilters,
     all_products,
+    clearFilters
   } = useFilterContext();
 
   const categories = getUniqueValues(all_products, 'category');
@@ -61,19 +62,51 @@ const Filters = () => {
                 className='company'
                 onChange={updateFilters}
               >
-                {companies.map((company) => {
-                  return <option value={company}>{company}</option>;
+                {companies.map((company, index) => {
+                  return (
+                    <option value={company} key={index}>
+                      {company}
+                    </option>
+                  );
                 })}
               </select>
             </div>
           </div>
           <div className='form-control'>
             <h5>colors</h5>
-            <div className='colors'></div>
+            <div className='colors'>
+              {colors.map((col, index) => {
+                if (col === 'all') {
+                  return (
+                    <button
+                      className={
+                        col === color ? 'all-btn active' : 'all-btn'
+                      }
+                      name='color'
+                      onClick={updateFilters}
+                      data-color='all'
+                      key={index}
+                    > all</button>
+                  );
+                }
+                return (
+                  <button
+                    className={col === color ? 'color-btn active' : 'color-btn'}
+                    name='color'
+                    style={{ background: col }}
+                    data-color={col}
+                    onClick={updateFilters}
+                    key={index}
+                  >
+                    {col === color && <FaCheck />}
+                  </button>
+                );
+              })}
+            </div>
           </div>
           <div className='form-control'>
             <h5>price</h5>
-            <p className='price'>{formatPrice(max_price)}</p>
+            <p className='price'>{formatPrice(price)}</p>
             <input
               type='range'
               name='price'
@@ -83,8 +116,15 @@ const Filters = () => {
               onChange={updateFilters}
             />
           </div>
-          <div className='form-control'></div>
+          <div className='form-control shipping'>
+              <label htmlFor="shipping">free shipping</label>
+              <input type="checkbox" name='shipping' id='shipping' onChange={updateFilters} checked={shipping} />
+              
+          </div>
         </form>
+        <button type='button' className='clear-btn' onClick={clearFilters}>
+            clear filters
+        </button>
       </div>
     </Wrapper>
   );
