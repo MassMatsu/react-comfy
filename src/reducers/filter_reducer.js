@@ -12,23 +12,34 @@ import {
 const filter_reducer = (state, action) => {
   if (action.type === LOAD_PRODUCTS) {
     console.log(action);
-    const allPrices = action.payload.map((p) => p.price)
-    const maxPrice = Math.max(...allPrices) // spread operator to spread elements in an array
-    const minPrice = Math.min(...allPrices)
+    const allPrices = action.payload.map((p) => p.price);
+    const maxPrice = Math.max(...allPrices); // spread operator to spread elements in an array
+    const minPrice = Math.min(...allPrices);
     //console.log(maxPrice, minPrice)
     return {
       ...state,
       all_products: [...action.payload],
       filtered_products: [...action.payload],
-      filters: {...state.filters, min_price: minPrice, max_price: maxPrice, price: maxPrice} // still need a copy of state.filters to overwrite the object
+      filters: {
+        ...state.filters,
+        min_price: minPrice,
+        max_price: maxPrice,
+        price: maxPrice,
+      }, // still need a copy of state.filters to overwrite the object
     }; // use copy of payload for each in order not to use the same place in memory!!
   }
   if (action.type === UPDATE_FILTERS) {
-    console.log(action)
-    return {...state, filters: {...state.filters, [action.payload.name]: action.payload.value}}
+    console.log(action);
+    return {
+      ...state,
+      filters: {
+        ...state.filters,
+        [action.payload.name]: action.payload.value,
+      },
+    };
   }
-   if (action.type === CLEAR_FILTERS) {
-    console.log(action)
+  if (action.type === CLEAR_FILTERS) {
+    console.log(action);
     return {
       ...state,
       filters: {
@@ -43,10 +54,41 @@ const filter_reducer = (state, action) => {
     };
   }
   if (action.type === FILTER_PRODUCTS) {
-    console.log(action)
-    return {...state}
+    console.log(action);
+    const { all_products } = state;
+    const { text, category, company, color, price, shipping } = state.filters;
+
+    let tempProducts = [...all_products]; // to avoid all_products to change and stay as state
+    if (text) {
+      tempProducts = tempProducts.filter((product) => {
+        return product.name.toLowerCase().startsWith(text);
+      });
+    }
+    if (category !== 'all') {
+      tempProducts = tempProducts.filter(
+        (product) => product.category === category
+      );
+    }
+    if (company !== 'all') {
+      tempProducts = tempProducts.filter(
+        (product) => product.company === company
+      );
+    }
+    if (color !== 'all') {
+      tempProducts = tempProducts.filter((product) => {
+        return product.colors.find((col) => col === color);
+      });
+    }
+    tempProducts = tempProducts.filter((product) => product.price <= price);
+    if (shipping) {
+      tempProducts = tempProducts.filter(
+        (product) => product.shipping === true
+      );
+    }
+
+    return { ...state, filtered_products: tempProducts };
   }
- 
+
   if (action.type === SET_GRIDVIEW) {
     console.log(action);
     return { ...state, grid_view: true };
