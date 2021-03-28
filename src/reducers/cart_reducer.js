@@ -22,13 +22,13 @@ const cart_reducer = (state, action) => {
           }
           return { ...cartItem, amount: newAmount };
         } else {
-          return cartItem;
+          return cartItem
         }
       });
 
       return { ...state, cart: tempCart };
     } else {
-      const newItem = {
+      const newItem = {　// create new Item in the cart if the item is not in the cart yet 
         id: id + color,
         name: product.name,
         color,
