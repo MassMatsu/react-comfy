@@ -10,11 +10,13 @@ import {
   About,
   PrivateRoute,
   Error,
+  AuthWrapper
 } from './pages/index';
 
 function App() {
   return (
-    <Router>
+    <AuthWrapper>
+        <Router>
       <Navbar/>
       <Sidebar/>
       <Switch>
@@ -41,6 +43,8 @@ function App() {
       </Switch>
       <Footer/>
     </Router>
+    </AuthWrapper>
+
   );
 }
 
