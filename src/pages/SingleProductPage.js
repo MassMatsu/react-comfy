@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect} from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useProductsContext } from '../context/products_context';
-import { single_product_url as url} from '../utils/constants';
+import { single_product_url as url } from '../utils/constants';
 import { formatPrice } from '../utils/helpers';
 import {
   Loading,
@@ -37,10 +37,10 @@ const SingleProductPage = () => {
   useEffect(() => {
     fetchSingleProduct(url, id);
     // eslint-disable-next-line
-  }, [id]);
+  }, [id])
+
 
   useEffect(() => {
-    console.log(error);
     if (error) {
       setTimeout(() => {
         history.push('/');
@@ -57,7 +57,7 @@ const SingleProductPage = () => {
   }
   return (
     <Wrapper>
-      <PageHero title='products' product={name}/>
+      <PageHero title='products' product={name} />
       <div className='section section-center page'>
         <Link to='/products' className='btn'>
           back to products
@@ -82,7 +82,7 @@ const SingleProductPage = () => {
               {brand}
             </p>
             <hr />
-           { stock > 0 && <AddToCart product={single_product} />}
+            {stock > 0 && <AddToCart product={single_product} />}
           </section>
         </div>
       </div>
