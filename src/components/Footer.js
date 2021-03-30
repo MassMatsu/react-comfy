@@ -1,5 +1,4 @@
 import React from 'react'
-import { FaDatabase } from 'react-icons/fa'
 import styled from 'styled-components'
 const Footer = () => {
   return <Wrapper>

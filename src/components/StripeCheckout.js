@@ -13,14 +13,21 @@ import { useUserContext } from '../context/user_context'
 import { formatPrice } from '../utils/helpers'
 import { useHistory } from 'react-router-dom'
 
+const promise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
+
 const CheckoutForm = () => {
-  return <h4>hello from Stripe Checkout </h4>
+  // const {cart, total, shipping_fee, clearCart} = useCartContext()
+  // const {myUser} = user
+  return <h2></h2>
 }
 
 const StripeCheckout = () => {
   return (
     <Wrapper>
-      <CheckoutForm />
+      <Elements stripe={promise}>
+       <CheckoutForm />
+      </Elements>
+     
     </Wrapper>
   )
 }

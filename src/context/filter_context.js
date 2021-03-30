@@ -11,7 +11,7 @@ import {
   CLEAR_FILTERS,
 } from '../actions';
 import { useProductsContext } from './products_context';
-import { GiConsoleController } from 'react-icons/gi';
+// import { GiConsoleController } from 'react-icons/gi';
 
 const initialState = {
   all_products: [],
