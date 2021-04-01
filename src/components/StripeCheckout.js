@@ -25,7 +25,7 @@ const CheckoutForm = () => {
   const [processing, setProcessing] = useState('');
   const [disabled, setDisabled] = useState(true);
   const [clientSecret, setClientSecret] = useState('');
-  const stripe = useState();
+  const stripe = useStripe();
   const elements = useElements();
 
   const cardStyle = {
@@ -47,14 +47,19 @@ const CheckoutForm = () => {
   };
 
   const createPaymentIntent = async () => {
+    console.log('hello from');
     try {
       const data = await axios.post(
         '/.netlify/functions/create-payment-intent',
-        JSON.stringfy({ cart, shipping_fee, total_amount })
-      )
-      console.log(data)
+        JSON.stringify({ cart, shipping_fee, total_amount })
+      );
+
+      console.log(data.data.clientSecret);
+      console.log(data);
+
+      setClientSecret(data.data.clientSecret); // once the data is back from server (should be getting secret key from stripe)
     } catch (error) {
-      console.log(error)
+      console.log(error.response);
     }
   };
 
@@ -63,11 +68,46 @@ const CheckoutForm = () => {
     // eslint-disable-next-line
   }, []);
 
-  const handleChange = async (event) => {};
-  const handleSubmit = async (ev) => {};
+  const handleChange = async (event) => {
+    setDisabled(event.empty)
+    setError(event.error ? event.error.message : '')
+  };
+  const handleSubmit = async (ev) => {
+    ev.preventDefault()
+    setProcessing(true)
+    const payload = await stripe.confirmCardPayment(clientSecret, {payment_method: {
+      card: elements.getElement(CardElement)
+    }})
+    if (payload.error) {
+      setError(`payment failed ${payload.error.message}`)
+      setProcessing(false)
+    } else {
+      setError(null)
+      setProcessing(false)
+      setSucceeded(true)
+      setTimeout(() => {
+        clearCart()
+        history.push('/')
+      }, 10000)
+    }
+  };
 
+  // <CardElement /> comes from stripe
   return (
     <div>
+      {succeeded ? (
+        <article>
+          <h4>Thank you</h4>
+          <h4>Your payment was successful!</h4>
+          <h4>Redirecting to home page shortly</h4>
+        </article>
+      ) : (
+        <article>
+          <h4>Hello, {myUser && myUser.name}</h4>
+          <p>Your total is {formatPrice(shipping_fee + total_amount)}</p>
+          <p>Test Card Number : 4242 4242 4242 4242</p>
+        </article>
+      )}
       <form id='payment-form' onSubmit={handleSubmit}>
         <CardElement
           id='card-element'
@@ -110,7 +150,7 @@ const StripeCheckout = () => {
 
 const Wrapper = styled.section`
   form {
-    width: 30vw;
+    width: 50vw;
     align-self: center;
     box-shadow: 0px 0px 0px 0.5px rgba(50, 50, 93, 0.1),
       0px 2px 5px 0px rgba(50, 50, 93, 0.1),
