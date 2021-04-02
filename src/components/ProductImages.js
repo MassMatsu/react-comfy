@@ -1,9 +1,33 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
+import React, { useState } from 'react';
+import styled from 'styled-components';
 
-const ProductImages = () => {
-  return <h4>product images</h4>
-}
+const ProductImages = ({ images = [{ url: '' }] }) => {
+  // set default value for the props because it is passed as undefined first because useEffect fetch images after rendering is completed (need it as empty array and empty string for url property of object inside array)
+  const [mainImage, setMainImage] = useState(images[0]);
+
+  const onClickImage = (index) => {
+    setMainImage(images[index]);
+  };
+  return (
+    <Wrapper>
+      <img src={mainImage.url} alt='main' className='main' />
+      <div className='gallery'>
+        {images.map((image, index) => {
+          const { url, filename } = image;
+          return (
+            <img
+              src={url}
+              alt={filename}
+              key={index}
+              onClick={() => onClickImage(index)}
+              className={`${image.url === mainImage.url? 'active' : null} `}
+            />
+          );
+        })}
+      </div>
+    </Wrapper>
+  );
+};
 
 const Wrapper = styled.section`
   .main {
@@ -48,6 +72,6 @@ const Wrapper = styled.section`
       }
     }
   }
-`
+`;
 
-export default ProductImages
+export default ProductImages;
