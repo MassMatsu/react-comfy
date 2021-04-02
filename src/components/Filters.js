@@ -6,7 +6,7 @@ import { FaCheck } from 'react-icons/fa';
 
 const Filters = () => {
   const {
-    filters: { text, category, color, price, min_price, max_price, shipping },
+    filters: { text, category, company, color, price, min_price, max_price, shipping },
     updateFilters,
     all_products,
     clearFilters
@@ -60,6 +60,7 @@ const Filters = () => {
               <select
                 name='company'
                 className='company'
+                value={company}
                 onChange={updateFilters}
               >
                 {companies.map((company, index) => {
