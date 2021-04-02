@@ -47,16 +47,11 @@ const CheckoutForm = () => {
   };
 
   const createPaymentIntent = async () => {
-    console.log('hello from');
     try {
       const data = await axios.post(
         '/.netlify/functions/create-payment-intent',
         JSON.stringify({ cart, shipping_fee, total_amount })
       );
-
-      console.log(data.data.clientSecret);
-      console.log(data);
-
       setClientSecret(data.data.clientSecret); // once the data is back from server (should be getting secret key from stripe)
     } catch (error) {
       console.log(error.response);
@@ -68,27 +63,33 @@ const CheckoutForm = () => {
     // eslint-disable-next-line
   }, []);
 
+  // this regarding to <CardElement /> comes from stripe and is setup by them
   const handleChange = async (event) => {
-    setDisabled(event.empty)
-    setError(event.error ? event.error.message : '')
+    setDisabled(event.empty);
+    setError(event.error ? event.error.message : '');
   };
+  //
   const handleSubmit = async (ev) => {
-    ev.preventDefault()
-    setProcessing(true)
-    const payload = await stripe.confirmCardPayment(clientSecret, {payment_method: {
-      card: elements.getElement(CardElement)
-    }})
+    ev.preventDefault();
+    setProcessing(true);
+    // this method provided from stripe as well
+    const payload = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: elements.getElement(CardElement),
+      },
+    });
+    // set the logic depending on the stripe process succeeded or not
     if (payload.error) {
-      setError(`payment failed ${payload.error.message}`)
-      setProcessing(false)
+      setError(`payment failed ${payload.error.message}`);
+      setProcessing(false);
     } else {
-      setError(null)
-      setProcessing(false)
-      setSucceeded(true)
+      setError(null);
+      setProcessing(false);
+      setSucceeded(true);
       setTimeout(() => {
-        clearCart()
-        history.push('/')
-      }, 10000)
+        clearCart();
+        history.push('/');
+      }, 10000);
     }
   };
 
@@ -127,10 +128,11 @@ const CheckoutForm = () => {
         )}
         {/* show a success message upon completion */}
         <p className={succeeded ? 'result-message' : 'result-message hidden'}>
-          Payment succeeded, see the result in your
+          Payment succeeded, see the result in your &nbsp;
           <a href={`https://dashboard.stripe.com/test/payments`}>
             Stripe dashboard
           </a>
+          <br />
           Refresh the page to pay again
         </p>
       </form>
